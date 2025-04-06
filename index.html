@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Rendezvous Driver Window</title>
 
     <!-- Map Styling -->
@@ -20,7 +20,14 @@
     <script src="https://kit.fontawesome.com/64353fe07c.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div class="header"> <!-- Div for Driving Navigation -->
+        <h2>Rendezvous Driver Navigation</h2>
+    </div>
     <div id="map"></div>
+    <div class="footer"> <!-- Div for Buttons like Drop Flag or Reroute option(?) --> <!-- Would like a Div above this for ETA of Passenger Timer -->
+        <h2>Driver Location</h2>
+        <button class="btn" id="btn">Drop Flag</button>
+    </div>
 </body>
 
 </html>
@@ -60,8 +67,29 @@ subdomains:['mt0','mt1','mt2','mt3']
 });
 googleStreets.addTo(map); // Comment out this line to remove this layer
 
+// // Setview for device location 
+// map.locate({setView: true, maxZoom: 16});
+
+// // Location accuracy function
+// function onLocationFound(e) {
+//     var radius = e.accuracy;
+
+//     L.marker(e.latlng).addTo(map)
+//         .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+//     L.circle(e.latlng, radius).addTo(map);
+// }
+
+// map.on('locationfound', onLocationFound);
+
+// // Location error function
+// function onLocationError(e) {
+//     alert(e.message);
+// }
+
+// map.on('locationerror', onLocationError);
+
 // Marker
-// Font Awesome script injection is in Codepen Settings for HTML
 var fontAwesomeIcon = L.divIcon({
 html: '<i class="fa-solid fa-flag fa-xl"></i>',
 iconSize: [20, 20],
@@ -102,7 +130,7 @@ var secondMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
 
 L.Routing.control({
 waypoints: [
-L.latLng(51.0447, -114.0719), //current location
+L.latLng(51.0547, -114.0819), //current location
 L.latLng(e.latlng.lat, e.latlng.lng) //selected location
 ]
 }).addTo(map);
