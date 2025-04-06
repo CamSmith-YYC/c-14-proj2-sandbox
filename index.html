@@ -4,8 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rendezvous Driver Window</title>
+
+    <!-- Map Styling -->
+    <link rel="stylesheet" href="mapstyle.css" />
+
+     <!-- leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+    <!-- leaflet routing machine css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/64353fe07c.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    
+    <div id="map"></div>
 </body>
+
 </html>
+<!-- leaflet js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+<!-- leaflet js routing machine  -->
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+<script>
+// Map Initialization
+var map = L.map('map').setView([51.0447, -114.0719], 13);
+
+// Layers website is https://leaflet-extras.github.io/leaflet-providers/preview/
+// OSM Layer
+var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 19,
+attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+// osm.addTo(map); // Comment out this line to remove this layer
+
+// Watercolour Layer
+var watercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+minZoom: 1,
+maxZoom: 19,
+attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+ext: 'jpg'
+});
+// watercolor.addTo(map); // Comment out this line to remove this layer
+
+// Google Maps Layer
+var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+maxZoom: 20,
+subdomains:['mt0','mt1','mt2','mt3']
+});
+googleStreets.addTo(map); // Comment out this line to remove this layer
+
+// Marker
+// Font Awesome script injection is in Codepen Settings for HTML
+var fontAwesomeIcon = L.divIcon({
+html: '<i class="fa-solid fa-flag fa-xl"></i>',
+iconSize: [20, 20],
+className: 'myDivIcon'
+});
+
+var passengerIcon = L.divIcon({
+html: '<i class="fa-solid fa-person-walking fa-flip-horizontal fa-xl"></i>',
+iconSize: [20, 20],
+className: 'myPassIcon'
+});
+
+var driverIcon = L.divIcon({
+html: '<i class="fa-solid fa-car-side fa-flip-horizontal fa-xl"></i>',
+iconSize: [20, 20],
+className: 'myDriveIcon'
+});
+
+var singleMarker = L.marker([51.0447, -114.0719], { icon: fontAwesomeIcon });
+var popup = singleMarker.bindPopup('This is your pickup location').openPopup();
+popup.addTo(map);
+
+var passMarker = L.marker([51.0477, -114.0619], { icon: passengerIcon });
+var popup = passMarker.bindPopup('This is the passenger location').openPopup();
+popup.addTo(map);
+
+var driveMarker = L.marker([51.0547, -114.0819], { icon: driverIcon });
+var popup = driveMarker.bindPopup('This is the driver location').openPopup();
+popup.addTo(map);
+
+// conversion to for Marker Coordinates to GeoJSON in console
+console.log(singleMarker.toGeoJSON());
+
+// map click event
+map.on('click', function (e) {
+console.log(e)
+var secondMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+
+L.Routing.control({
+waypoints: [
+L.latLng(51.0447, -114.0719), //current location
+L.latLng(e.latlng.lat, e.latlng.lng) //selected location
+]
+}).addTo(map);
+})
+
+//   L.Routing.control({
+//   waypoints: [
+//     L.latLng(51.0447, -114.0719),
+//     L.latLng(51.0547, -114.0819)
+//   ]
+// }).addTo(map);
+
+// Layer Controller
+var baseMaps = {
+"OpenStreetMap": osm,
+"Stamen Watercolor": watercolor,
+"Google Street": googleStreets
+};
+
+var overlayMaps = {
+"Pickup": singleMarker,
+"Passenger": passMarker,
+"Driver": driveMarker
+};
+
+var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+</script>
