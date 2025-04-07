@@ -20,13 +20,22 @@
     <script src="https://kit.fontawesome.com/64353fe07c.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="header"> <!-- Div for Driving Navigation -->
-        <h2>Rendezvous Driver Navigation</h2>
-    </div>
-    <div id="map"></div>
-    <div class="footer"> <!-- Div for Buttons like Drop Flag or Reroute option(?) --> <!-- Would like a Div above this for ETA of Passenger Timer -->
-        <h2>Driver Location</h2>
-        <button class="btn" id="btn">Drop Flag</button>
+    <!-- Main Container for the entire page -->
+    <div class="container">
+        <div class="content"> 
+            <!-- Div for Driving Navigation -->
+            <div class="driverNavbar">
+                <h2 class="driverNavbarText">Rendezvous Driver Navigation</h2>
+            </div>
+            <!-- Map Container -->
+            <div id="map"></div>
+            <!-- Timer Bar -->
+            <div class="timerBar">12m 03s : Estimated Passenger Arrival</div>
+            <!-- Div for Buttons like Drop Flag or Reroute option(?) -->
+            <div class="buttonBar">
+                <button class="flagButton" id="flagButton">Drop Flag</button>
+            </div>
+        </div>
     </div>
 </body>
 
